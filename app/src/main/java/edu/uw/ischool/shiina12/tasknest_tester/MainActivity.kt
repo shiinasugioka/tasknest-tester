@@ -30,7 +30,8 @@ class MainActivity : AppCompatActivity() {
      * If modifying these scopes, delete your previously saved tokens/ folder.
      */
     private val SCOPES = listOf(TasksScopes.TASKS_READONLY)
-    private val CREDENTIALS_FILE_PATH = "app/src/main/res/credentials.json"
+//    private val file = File(resources.getResourceName())
+    private val CREDENTIALS_FILE_PATH = "credentials.json"
 
     /**
      * Creates an authorized Credential object.
@@ -42,11 +43,11 @@ class MainActivity : AppCompatActivity() {
     @Throws(IOException::class)
     private fun getCredentials(HTTP_TRANSPORT: NetHttpTransport): Credential? {
         // Load client secrets.
-        val `in` =
-            MainActivity::class.java.getResource(CREDENTIALS_FILE_PATH)?.readText()
+        val inp =
+            MainActivity::class.java.getResourceAsStream(CREDENTIALS_FILE_PATH)
                 ?: throw FileNotFoundException("Resource not found: " + CREDENTIALS_FILE_PATH)
         val clientSecrets =
-            GoogleClientSecrets.load(JSON_FACTORY, InputStreamReader(`in`))
+            GoogleClientSecrets.load(JSON_FACTORY, InputStreamReader(inp))
 
         // Build flow and trigger user authorization request.
         val flow = GoogleAuthorizationCodeFlow.Builder(
