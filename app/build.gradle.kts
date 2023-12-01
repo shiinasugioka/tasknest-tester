@@ -10,7 +10,7 @@ android {
     defaultConfig {
         applicationId = "edu.uw.ischool.shiina12.tasknest_tester"
         minSdk = 28
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -33,13 +33,19 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    packaging { resources.excludes.add("META-INF/*") }
 }
 
 dependencies {
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
+    implementation("com.google.api-client:google-api-client-android:1.23.0")
+    implementation("com.google.apis:google-api-services-tasks:v1-rev20230401-2.0.0"){
+        exclude("org.apache.httpcomponents")
+    }
 
-    implementation("androidx.core:core-ktx:1.9.0")
+    implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.10.0")
+    implementation("com.google.android.material:material:1.9.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

@@ -13,6 +13,7 @@ dependencyResolutionManagement {
     }
 }
 
+
 rootProject.name = "tasknest-tester"
 include(":app")
  
