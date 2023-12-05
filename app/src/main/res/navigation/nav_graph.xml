@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/getEventFragment">
+
+    <fragment
+        android:id="@+id/getEventFragment"
+        android:name="edu.uw.ischool.shiina12.tasknest_tester.GetEventFragment"
+        android:label="fragment_get_event"
+        tools:layout="@layout/activity_get_event_fragment" />
+</navigation>

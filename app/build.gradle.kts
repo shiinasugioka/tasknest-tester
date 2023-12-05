@@ -26,14 +26,23 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    packaging { resources.excludes.add("META-INF/*") }
+
+    packaging {
+        resources.excludes.add("META-INF/*")
+    }
+
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -69,7 +78,9 @@ dependencies {
     implementation("com.google.apis:google-api-services-calendar:v3-rev305-1.23.0")
     implementation("com.google.android.gms:play-services-auth:20.7.0")
 
-//    implementation("com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava")
+    // https://mvnrepository.com/artifact/com.google.guava/listenablefuture
+    implementation("com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava")
+    implementation("com.google.guava:guava:32.1.3-android")
 
     implementation("com.google.api-client:google-api-client-android:1.23.0") {
         exclude("org.apache.httpcomponents")
