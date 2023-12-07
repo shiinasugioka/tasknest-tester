@@ -1,4 +1,4 @@
-package edu.uw.ischool.shiina12.tasknest_tester
+package edu.uw.ischool.shiina12.tasknest_tester.old_files
 
 import android.app.ProgressDialog
 import android.content.Context
@@ -22,21 +22,19 @@ import com.google.api.client.util.DateTime
 import com.google.api.client.util.ExponentialBackOff
 import com.google.api.services.calendar.Calendar
 import com.google.api.services.calendar.CalendarScopes
+import com.google.api.services.calendar.model.Event
+import com.google.api.services.calendar.model.EventDateTime
+import com.google.api.services.calendar.model.EventReminder
 import edu.uw.ischool.shiina12.tasknest_tester.databinding.ActivityGetEventFragmentBinding
-import edu.uw.ischool.shiina12.tasknest_tester.model.GetEventModel
-import edu.uw.ischool.shiina12.tasknest_tester.util.Constants
-import edu.uw.ischool.shiina12.tasknest_tester.util.executeAsyncTask
+import edu.uw.ischool.shiina12.tasknest_tester.old_files.model.GetEventModel
 import kotlinx.coroutines.cancel
 import pub.devrel.easypermissions.EasyPermissions
 import java.io.IOException
 
+
 const val TAG = "GetEventFragment"
 
 class GetEventFragment : Fragment() {
-
-//    private var _binding: FragmentGetEventBinding? = null
-//    private val binding get() = _binding
-
     private var _binding: ActivityGetEventFragmentBinding? = null
     private val binding get() = _binding!!
 
@@ -55,7 +53,7 @@ class GetEventFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = ActivityGetEventFragmentBinding.inflate(inflater, container, false)
         initView()
 
@@ -117,9 +115,13 @@ class GetEventFragment : Fragment() {
             chooseAccount()
         } else if (!isDeviceOnline()) {
             binding.txtOut.text = "No network connection available."
-        } else {
-            makeRequestTask()
         }
+//        else {
+//            Log.d(TAG, "make request task will be called")
+//            makeRequestTask()
+//        }
+        Log.d(TAG, "make request task will be called")
+        makeRequestTask()
     }
 
     private fun acquireGooglePlayServices() {
@@ -169,33 +171,72 @@ class GetEventFragment : Fragment() {
     }
 
     private fun getDataFromCalendar(): MutableList<GetEventModel> {
-        val now = DateTime(System.currentTimeMillis())
+        Log.d(TAG, "getDataFromCalendar called")
+//        val now = DateTime(System.currentTimeMillis())
         val eventStrings = ArrayList<GetEventModel>()
         try {
-            val events = mService!!.events().list("primary")
-                .setMaxResults(10)
-                .setTimeMin(now)
-                .setOrderBy("startTime")
-                .setSingleEvents(true)
-                .execute()
 
-            val items = events.items
+//            // Iterate over the events in the specified calendar
+//            var pageToken: String? = null
+//            do {
+//                val events =
+//                    mService?.events()?.list("primary")?.setPageToken(pageToken)?.execute()
+//                Log.i(TAG, "retrieved event")
+//                val items: MutableList<Event>? = events?.items
+//                if (items != null) {
+//                    for (event in items) {
+//                        Log.i(TAG, "event: ${event.summary}")
+//                        eventStrings.add(
+//                            GetEventModel(
+//                                summary = event.summary,
+//                                startDate = event.start.toString()
+//                            )
+//                        )
+//                    }
+//                }
+//                if (events != null) {
+//                    pageToken = events.nextPageToken
+//                }
+//            } while (pageToken != null)
 
-            for (event in items) {
-                var start = event.start.dateTime
-                if (start == null) {
-                    start = event.start.date
-                }
+            var event = Event()
+                .setSummary("Google I/O 2015")
+                .setLocation("800 Howard St., San Francisco, CA 94103")
+                .setDescription("A chance to hear more about Google's developer products.")
 
-                eventStrings.add(
-                    GetEventModel(
-                        summary = event.summary,
-                        startDate = start.toString()
-                    )
-                )
-            }
+            val startDateTime = DateTime("2023-12-206T09:00:00-07:00")
+            val start = EventDateTime()
+                .setDateTime(startDateTime)
+                .setTimeZone("America/Los_Angeles")
+            event.setStart(start)
 
-            return eventStrings
+            val endDateTime = DateTime("2023-12-20T17:00:00-07:00")
+            val end = EventDateTime()
+                .setDateTime(endDateTime)
+                .setTimeZone("America/Los_Angeles")
+            event.setEnd(end)
+
+            val recurrence = arrayOf("RRULE:FREQ=DAILY;COUNT=2")
+            event.setRecurrence(listOf(*recurrence))
+
+//            val attendees = arrayOf(
+//                EventAttendee().setEmail("lpage@example.com"),
+//                EventAttendee().setEmail("sbrin@example.com")
+//            )
+//            event.setAttendees(listOf(*attendees))
+
+            val reminderOverrides = arrayOf(
+                EventReminder().setMethod("email").setMinutes(24 * 60),
+                EventReminder().setMethod("popup").setMinutes(10)
+            )
+            val reminders = Event.Reminders()
+                .setUseDefault(false)
+                .setOverrides(listOf(*reminderOverrides))
+            event.setReminders(reminders)
+
+            val calendarId = "primary"
+            event = mService?.events()?.insert(calendarId, event)?.execute()
+            Log.i(TAG, "Event created: ${event.htmlLink}")
 
         } catch (e: IOException) {
             Log.d(TAG, e.message.toString())
@@ -206,6 +247,7 @@ class GetEventFragment : Fragment() {
 
     private fun makeRequestTask() {
         var mLastError: Exception? = null
+        Log.d(TAG, "makeRequestTask called")
 
         lifecycleScope.executeAsyncTask(
             // show our progress design
@@ -224,7 +266,8 @@ class GetEventFragment : Fragment() {
             },
             // get the Post data
             onPostExecute = { output ->
-                mProgress!!.hide()
+                mProgress!!.show()
+                Log.i(TAG, "shiina here")
                 if (output == null || output.size == 0) {
                     Log.d(TAG, "post output is null")
                 } else {
@@ -239,7 +282,7 @@ class GetEventFragment : Fragment() {
             },
             // checks in case operations fail
             onCancelled = {
-                mProgress!!.hide()
+                mProgress!!.show()
                 if (mLastError != null) {
                     if (mLastError is GooglePlayServicesAvailabilityIOException) {
                         showGooglePlayServicesAvailabilityErrorDialog(
@@ -269,6 +312,7 @@ class GetEventFragment : Fragment() {
     }
 
     private fun isDeviceOnline(): Boolean {
+        Log.d(TAG, "check for device online called")
         val connMgr =
             this.activity?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = connMgr.activeNetworkInfo

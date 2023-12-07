@@ -15,6 +15,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        //multiDexEnabled = true
     }
 
     buildTypes {
@@ -45,6 +47,12 @@ android {
     }
 }
 
+configurations {
+    implementation {
+        exclude("com.google.guava", "guava-jdk5")
+    }
+}
+
 dependencies {
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
@@ -62,11 +70,7 @@ dependencies {
     implementation("com.google.apis:google-api-services-calendar:v3-rev305-1.23.0")
     implementation("com.google.android.gms:play-services-auth:20.7.0")
 
-    // https://mvnrepository.com/artifact/com.google.guava/listenablefuture
-    implementation("com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava")
-
-    // https://mvnrepository.com/artifact/com.google.guava/guava
-    implementation("com.google.guava:guava:32.1.3-android")
+    implementation("com.google.guava:guava:31.1-android")
 
     implementation("com.google.api-client:google-api-client-android:1.23.0") {
         exclude("org.apache.httpcomponents")

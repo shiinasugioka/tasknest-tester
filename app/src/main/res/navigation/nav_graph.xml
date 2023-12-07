@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/getEventFragment"
-        android:name="edu.uw.ischool.shiina12.tasknest_tester.GetEventFragment"
+        android:name="edu.uw.ischool.shiina12.tasknest_tester.old_files.GetEventFragment"
         android:label="fragment_get_event"
         tools:layout="@layout/activity_get_event_fragment" />
 </navigation>

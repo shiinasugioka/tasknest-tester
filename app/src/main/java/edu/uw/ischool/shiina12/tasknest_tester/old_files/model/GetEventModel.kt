@@ -1,4 +1,4 @@
-package edu.uw.ischool.shiina12.tasknest_tester.model
+package edu.uw.ischool.shiina12.tasknest_tester.old_files.model
 
 data class GetEventModel(
     var id: Int = 0,
